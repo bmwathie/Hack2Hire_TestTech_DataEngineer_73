@@ -1,0 +1,25 @@
+version: '3'
+services:
+  bd:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_DB: weather_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes: 
+      - postgres_data:/var/lib/postgresql/data
+      - ./backups:/backups
+
+  appli:
+    container_name: weather_data
+    build: .
+    depends_on:
+      - bd
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@bd:5432/weather_db
+
+volumes: 
+  postgres_data:
